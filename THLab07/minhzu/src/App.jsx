@@ -1,11 +1,14 @@
-import Home from './components/Home'
+import Home from "./components/Home";
+import { NavProvider } from "./context/NavContext";
+
 function App() {
-  
   return (
-    <div>
-      <Home />
-    </div>
-  )
+    <NavProvider>
+      <div>
+        <Home />
+      </div>
+    </NavProvider>
+  );
 }
 
-export default App
+export default App;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaShoppingCart, FaDollarSign, FaUserPlus } from "react-icons/fa";
-
+import { CiViewList } from "react-icons/ci";
 const Overview = () => {
   const [apiData, setApiData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -53,7 +53,9 @@ const Overview = () => {
     return (
       <div className="p-4">
         <div className="flex items-center mb-4">
-          <div className="h-5 w-5 bg-pink-500 rounded mr-2"></div>
+          <div>
+            <CiViewList className="h-5 w-5 rounded mr-2" />
+          </div>
           <h2 className="text-lg font-bold">Overview</h2>
         </div>
         <div className="grid grid-cols-3 gap-4">
@@ -71,7 +73,9 @@ const Overview = () => {
     return (
       <div className="p-4">
         <div className="flex items-center mb-4">
-          <div className="h-5 w-5 bg-pink-500 rounded mr-2"></div>
+          <div>
+            <CiViewList className="h-5 w-5 rounded mr-2" />
+          </div>
           <h2 className="text-lg font-bold">Overview</h2>
         </div>
         <div className="p-4 bg-red-100 text-red-600 rounded-lg">
@@ -83,7 +87,9 @@ const Overview = () => {
   return (
     <div className="p-4">
       <div className="flex items-center mb-4">
-        <div className="h-5 w-5 bg-pink-500 rounded mr-2"></div>
+        <div>
+          <CiViewList className="h-5 w-5 rounded mr-2" />
+        </div>
         <h2 className="text-lg font-bold">Overview</h2>
       </div>
       <div className="grid grid-cols-3 gap-4">
