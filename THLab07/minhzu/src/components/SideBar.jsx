@@ -28,22 +28,38 @@ const SideBar = () => {
 
       <nav className="flex-1">
         <ul className="space-y-4">
-          <NavLink icon={<FiGrid />} onClick={handleNavigation}>
+          <NavLink icon={<FiGrid />} to="/" onClick={handleNavigation}>
             Dashboard
           </NavLink>
-          <NavLink icon={<FiFolder />} onClick={handleNavigation}>
+          <NavLink
+            icon={<FiFolder />}
+            to="/projects"
+            onClick={handleNavigation}
+          >
             Projects
           </NavLink>
-          <NavLink icon={<FiUsers />} onClick={handleNavigation}>
+          <NavLink icon={<FiUsers />} to="/teams" onClick={handleNavigation}>
             Teams
           </NavLink>
-          <NavLink icon={<FiPieChart />} onClick={handleNavigation}>
+          <NavLink
+            icon={<FiPieChart />}
+            to="/analytics"
+            onClick={handleNavigation}
+          >
             Analytics
           </NavLink>
-          <NavLink icon={<FiMessageSquare />} onClick={handleNavigation}>
+          <NavLink
+            icon={<FiMessageSquare />}
+            to="/messages"
+            onClick={handleNavigation}
+          >
             Messages
           </NavLink>
-          <NavLink icon={<FiCode />} onClick={handleNavigation}>
+          <NavLink
+            icon={<FiCode />}
+            to="/integrations"
+            onClick={handleNavigation}
+          >
             Integrations
           </NavLink>
         </ul>

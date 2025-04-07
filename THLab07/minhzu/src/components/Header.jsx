@@ -1,13 +1,21 @@
 import React from "react";
 import { FaSearch, FaBell, FaQuestionCircle } from "react-icons/fa";
-import { useActiveNav } from "../hooks/useActiveNav";
+import { useLocation } from "react-router-dom";
 
 const Header = () => {
-  const { activeNavItem } = useActiveNav();
+  const location = useLocation();
+
+  // Get the current page title based on the path
+  const getPageTitle = () => {
+    const path = location.pathname;
+    if (path === "/") return "Dashboard";
+    // Remove the leading slash and capitalize the first letter
+    return path.substring(1).charAt(0).toUpperCase() + path.substring(2);
+  };
 
   return (
     <header className="flex justify-between items-center p-4 bg-white shadow-sm">
-      <h2 className="text-lg font-bold text-pink-500">{activeNavItem}</h2>
+      <h2 className="text-lg font-bold text-pink-500">{getPageTitle()}</h2>
       <div className="flex items-center space-x-4">
         <div className="relative">
           <FaSearch className="absolute left-3 top-2.5 text-gray-400" />
