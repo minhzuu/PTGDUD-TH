@@ -1,63 +1,105 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FaEdit, FaFileImport, FaFileExport } from "react-icons/fa";
 
 const DataTable = () => {
-  const rows = [
-    {
-      id: 1,
-      avatar: "👩",
-      name: "Elizabeth Lee",
-      company: "AvatarSystems",
-      value: "$359",
-      date: "10/07/2023",
-      status: "New",
-    },
-    {
-      id: 2,
-      avatar: "👨",
-      name: "Carlos Garcia",
-      company: "SmoozShift",
-      value: "$747",
-      date: "24/07/2023",
-      status: "New",
-    },
-    {
-      id: 3,
-      avatar: "👩",
-      name: "Elizabeth Bailey",
-      company: "Prime Time Telecom",
-      value: "$564",
-      date: "08/08/2023",
-      status: "In-progress",
-    },
-    {
-      id: 4,
-      avatar: "👨",
-      name: "Ryan Brown",
-      company: "OmniTech Corporation",
-      value: "$541",
-      date: "31/08/2023",
-      status: "In-progress",
-    },
-    {
-      id: 5,
-      avatar: "👨",
-      name: "Ryan Young",
-      company: "DataStream Inc.",
-      value: "$769",
-      date: "01/05/2023",
-      status: "Completed",
-    },
-    {
-      id: 6,
-      avatar: "👩",
-      name: "Hailey Adams",
-      company: "FlowRush",
-      value: "$922",
-      date: "10/06/2023",
-      status: "Completed",
-    },
-  ];
+  const [apiData, setApiData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "https://67da8b1935c87309f52cfe4b.mockapi.io/rows_DataTable"
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        setApiData(data);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Get current items
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = apiData.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(apiData.length / itemsPerPage);
+
+  // Generate page numbers
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
+
+  // Handle status styling
+  const getStatusStyle = (status) => {
+    if (status === "Active" || status === "Completed") {
+      return "bg-green-100 text-green-800";
+    } else if (status === "In-progress") {
+      return "bg-yellow-100 text-yellow-800";
+    } else {
+      return "bg-blue-100 text-blue-800";
+    }
+  };
+
+  if (loading)
+    return (
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <div className="h-5 w-5 bg-pink-500 rounded mr-2"></div>
+            <h2 className="text-lg font-bold">Detailed report</h2>
+          </div>
+          <div className="flex space-x-2">
+            <button className="flex items-center bg-white border border-gray-300 rounded-md px-3 py-1 text-sm">
+              <FaFileImport className="mr-2" /> Import
+            </button>
+            <button className="flex items-center bg-white border border-gray-300 rounded-md px-3 py-1 text-sm">
+              <FaFileExport className="mr-2" /> Export
+            </button>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-sm p-4">
+          <div className="animate-pulse space-y-4">
+            <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+            <div className="space-y-2">
+              {[...Array(5)].map((_, index) => (
+                <div key={index} className="h-12 bg-gray-200 rounded"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="p-4">
+        <div className="flex items-center mb-4">
+          <div className="h-5 w-5 bg-pink-500 rounded mr-2"></div>
+          <h2 className="text-lg font-bold">Detailed report</h2>
+        </div>
+        <div className="p-4 bg-red-100 text-red-600 rounded-lg">
+          Error loading data: {error}
+        </div>
+      </div>
+    );
 
   return (
     <div className="p-4">
@@ -104,15 +146,19 @@ const DataTable = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {rows.map((row) => (
+            {currentItems.map((row) => (
               <tr key={row.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <input type="checkbox" className="h-4 w-4 rounded" />
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
-                    <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-sm mr-3">
-                      {row.avatar}
+                    <div className="h-8 w-8 rounded-full overflow-hidden mr-3">
+                      <img
+                        src={row.avatar}
+                        alt={row.name}
+                        className="h-full w-full object-cover"
+                      />
                     </div>
                     <span className="font-medium text-gray-900">
                       {row.name}
@@ -131,13 +177,7 @@ const DataTable = () => {
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span
                     className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                    ${
-                      row.status === "Completed"
-                        ? "bg-green-100 text-green-800"
-                        : row.status === "In-progress"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-blue-100 text-blue-800"
-                    }`}
+                      ${getStatusStyle(row.status)}`}
                   >
                     {row.status}
                   </span>
@@ -153,21 +193,33 @@ const DataTable = () => {
         </table>
 
         <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-          <div className="text-sm text-gray-500">63 results</div>
+          <div className="text-sm text-gray-500">{apiData.length} results</div>
           <nav className="flex items-center">
             <div className="flex-1 flex justify-between sm:hidden">
-              <a
-                href="#"
-                className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              <button
+                onClick={() => currentPage > 1 && paginate(currentPage - 1)}
+                disabled={currentPage === 1}
+                className={`relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
+                  currentPage === 1
+                    ? "text-gray-300"
+                    : "text-gray-700 bg-white hover:bg-gray-50"
+                }`}
               >
                 Previous
-              </a>
-              <a
-                href="#"
-                className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              </button>
+              <button
+                onClick={() =>
+                  currentPage < totalPages && paginate(currentPage + 1)
+                }
+                disabled={currentPage === totalPages}
+                className={`ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md ${
+                  currentPage === totalPages
+                    ? "text-gray-300"
+                    : "text-gray-700 bg-white hover:bg-gray-50"
+                }`}
               >
                 Next
-              </a>
+              </button>
             </div>
             <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-end">
               <div>
@@ -175,51 +227,45 @@ const DataTable = () => {
                   className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
                   aria-label="Pagination"
                 >
-                  <a
-                    href="#"
-                    className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                  <button
+                    onClick={() => currentPage > 1 && paginate(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 ${
+                      currentPage === 1
+                        ? "text-gray-300 bg-gray-50"
+                        : "text-gray-500 bg-white hover:bg-gray-50"
+                    }`}
                   >
                     &lt;
-                  </a>
-                  <a
-                    href="#"
-                    className="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-pink-500 text-sm font-medium text-white hover:bg-pink-600"
-                  >
-                    1
-                  </a>
-                  <a
-                    href="#"
-                    className="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                  >
-                    2
-                  </a>
-                  <a
-                    href="#"
-                    className="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                  >
-                    3
-                  </a>
-                  <span className="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500">
-                    ...
-                  </span>
-                  <a
-                    href="#"
-                    className="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                  >
-                    10
-                  </a>
-                  <a
-                    href="#"
-                    className="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                  >
-                    11
-                  </a>
-                  <a
-                    href="#"
-                    className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                  </button>
+
+                  {pageNumbers.map((number) => (
+                    <button
+                      key={number}
+                      onClick={() => paginate(number)}
+                      className={`relative inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium ${
+                        currentPage === number
+                          ? "bg-pink-500 text-white hover:bg-pink-600"
+                          : "bg-white text-gray-500 hover:bg-gray-50"
+                      }`}
+                    >
+                      {number}
+                    </button>
+                  ))}
+
+                  <button
+                    onClick={() =>
+                      currentPage < totalPages && paginate(currentPage + 1)
+                    }
+                    disabled={currentPage === totalPages}
+                    className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 ${
+                      currentPage === totalPages
+                        ? "text-gray-300 bg-gray-50"
+                        : "text-gray-500 bg-white hover:bg-gray-50"
+                    }`}
                   >
                     &gt;
-                  </a>
+                  </button>
                 </nav>
               </div>
             </div>
