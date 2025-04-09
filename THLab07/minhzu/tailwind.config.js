@@ -20,6 +20,19 @@ export default {
           500: "#ADB5BD",
         },
       },
+      animation: {
+        fadeIn: "fadeIn 0.3s ease-in-out",
+      },
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: "0", transform: "scale(0.95)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+      },
+      zIndex: {
+        1000: "1000",
+        1001: "1001",
+      },
     },
   },
   plugins: [],
