@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaPlus } from "react-icons/fa";
 import Modal from "./Modal";
 import EditForm from "./EditForm";
 
@@ -9,8 +9,29 @@ const DataTable = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [currentRow, setCurrentRow] = useState(null);
   const rowsPerPage = 6;
+
+  // Format date for input field (YYYY-MM-DD)
+  const formatDateForInput = (dateStr) => {
+    try {
+      const date = new Date(dateStr);
+      return date.toISOString().split("T")[0];
+    } catch (e) {
+      return "";
+    }
+  };
+
+  // Default empty user for the add form
+  const emptyUser = {
+    name: "",
+    company: "",
+    value: "$0.00",
+    date: formatDateForInput(new Date()),
+    status: "New",
+    avatar: "", // Add empty avatar field
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,8 +81,18 @@ const DataTable = () => {
     setIsModalOpen(true);
   };
 
+  const handleOpenAddModal = () => {
+    setCurrentRow(emptyUser);
+    setIsAddModalOpen(true);
+  };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    setCurrentRow(null);
+  };
+
+  const handleCloseAddModal = () => {
+    setIsAddModalOpen(false);
     setCurrentRow(null);
   };
 
@@ -78,6 +109,45 @@ const DataTable = () => {
     setRows(updatedRows);
     setIsModalOpen(false);
     setCurrentRow(null);
+  };
+
+  const handleAddCustomer = async (newCustomer) => {
+    try {
+      // Add loading state if needed
+
+      // Make API call to create new customer
+      const response = await fetch(
+        "https://67da8b1935c87309f52cfe4b.mockapi.io/rows_DataTable",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newCustomer),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      // Get the newly created customer with server-generated ID
+      const createdCustomer = await response.json();
+
+      // Update local state with the new customer
+      const updatedRows = [...rows, createdCustomer];
+
+      // Save to localStorage
+      localStorage.setItem("tableData", JSON.stringify(updatedRows));
+
+      // Update component state
+      setRows(updatedRows);
+      setIsAddModalOpen(false);
+      setCurrentRow(null);
+    } catch (err) {
+      console.error("Error adding new customer:", err);
+      // Handle error (could set an error state and display to user)
+    }
   };
 
   const getStatusClass = (status) => {
@@ -115,16 +185,6 @@ const DataTable = () => {
         .replace(/\//g, "/");
     } catch (e) {
       return dateStr;
-    }
-  };
-
-  // Format date for input field (YYYY-MM-DD)
-  const formatDateForInput = (dateStr) => {
-    try {
-      const date = new Date(dateStr);
-      return date.toISOString().split("T")[0];
-    } catch (e) {
-      return "";
     }
   };
 
@@ -190,6 +250,18 @@ const DataTable = () => {
   return (
     <>
       <div className="bg-white rounded-lg">
+        <div className="flex justify-between items-center p-4 border-b border-gray-100">
+          <h2 className="text-lg font-semibold text-gray-800">
+            Customer Table
+          </h2>
+          <button
+            onClick={handleOpenAddModal}
+            className="px-4 py-2 bg-rose-500 text-white rounded-md flex items-center gap-2 hover:bg-rose-600 transition-colors"
+          >
+            <FaPlus size={14} />
+            <span>Add Customer</span>
+          </button>
+        </div>
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-100">
@@ -311,6 +383,19 @@ const DataTable = () => {
           data={currentRow}
           onSubmit={handleSaveChanges}
           onCancel={handleCloseModal}
+        />
+      </Modal>
+
+      {/* Add Modal */}
+      <Modal
+        isOpen={isAddModalOpen}
+        onClose={handleCloseAddModal}
+        title="Add New Customer"
+      >
+        <EditForm
+          data={currentRow}
+          onSubmit={handleAddCustomer}
+          onCancel={handleCloseAddModal}
         />
       </Modal>
     </>

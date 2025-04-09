@@ -11,6 +11,9 @@ const EditForm = ({ data, onSubmit, onCancel }) => {
     }
   );
 
+  // Determine if we're adding a new user or editing an existing one
+  const isAddMode = !data?.id;
+
   useEffect(() => {
     if (data) {
       setFormData(data);
@@ -98,13 +101,12 @@ const EditForm = ({ data, onSubmit, onCancel }) => {
             Order Date
           </label>
           <input
-            type="text"
+            type="date"
             id="date"
             name="date"
             value={formData.date}
             onChange={handleChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-rose-500 focus:border-rose-500"
-            placeholder="04/07/2025"
             required
           />
         </div>
@@ -146,7 +148,7 @@ const EditForm = ({ data, onSubmit, onCancel }) => {
           type="submit"
           className="px-5 py-2 bg-rose-500 border border-transparent rounded-md text-sm font-medium text-white hover:bg-rose-600 transition-colors"
         >
-          Save Changes
+          {isAddMode ? "Add Customer" : "Save Changes"}
         </button>
       </div>
     </form>
