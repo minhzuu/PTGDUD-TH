@@ -1,11 +1,11 @@
-import Home from './components/Home'
+import Home from "./components/Home";
+
 function App() {
-  
   return (
-    <div>
+    <div className="flex min-h-screen bg-gray-100">
       <Home />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
