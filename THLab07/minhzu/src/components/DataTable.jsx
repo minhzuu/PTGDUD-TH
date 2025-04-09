@@ -3,7 +3,7 @@ import { FaEdit, FaFileImport, FaFileExport } from "react-icons/fa";
 import Modal from "./Modal";
 import EditForm from "./EditForm";
 import Notification from "./Notification";
-
+import { BiDetail } from "react-icons/bi";
 const DataTable = () => {
   const [apiData, setApiData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -108,7 +108,9 @@ const DataTable = () => {
       <div className="p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
-            <div className="h-5 w-5 bg-pink-500 rounded mr-2"></div>
+            <div>
+              <BiDetail className="h-5 w-5 rounded mr-2" />
+            </div>
             <h2 className="text-lg font-bold">Detailed report</h2>
           </div>
           <div className="flex space-x-2">
@@ -138,7 +140,9 @@ const DataTable = () => {
     return (
       <div className="p-4">
         <div className="flex items-center mb-4">
-          <div className="h-5 w-5 bg-pink-500 rounded mr-2"></div>
+          <div>
+            <BiDetail className="h-5 w-5 rounded mr-2" />
+          </div>
           <h2 className="text-lg font-bold">Detailed report</h2>
         </div>
         <div className="p-4 bg-red-100 text-red-600 rounded-lg">
@@ -151,7 +155,9 @@ const DataTable = () => {
     <div className="p-4">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
-          <div className="h-5 w-5 bg-pink-500 rounded mr-2"></div>
+          <div>
+            <BiDetail className="h-5 w-5 rounded mr-2" />
+          </div>
           <h2 className="text-lg font-bold">Detailed report</h2>
         </div>
         <div className="flex space-x-2">
