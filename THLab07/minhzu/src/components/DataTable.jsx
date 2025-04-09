@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { FaEdit, FaFileImport, FaFileExport } from "react-icons/fa";
+<<<<<<< HEAD
 import Modal from "./Modal";
 import EditForm from "./EditForm";
 import Notification from "./Notification";
+=======
+>>>>>>> parent of 562c3c3 (add Click Edit Modal)
 import { BiDetail } from "react-icons/bi";
 const DataTable = () => {
   const [apiData, setApiData] = useState([]);
@@ -10,13 +13,6 @@ const DataTable = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState(null);
-  const [notification, setNotification] = useState({
-    show: false,
-    message: "",
-    type: "success",
-  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,42 +61,6 @@ const DataTable = () => {
     } else {
       return "bg-blue-100 text-blue-800";
     }
-  };
-
-  // Handle opening edit modal
-  const handleEdit = (item) => {
-    setEditingItem(item);
-    setIsModalOpen(true);
-  };
-
-  // Handle saving edited data
-  const handleSave = (updatedItem) => {
-    // In a real application, you would make an API call here to update the data
-    // For this example, we'll update it locally
-    const updatedData = apiData.map((item) =>
-      item.id === updatedItem.id ? { ...item, ...updatedItem } : item
-    );
-
-    setApiData(updatedData);
-    setIsModalOpen(false);
-    setEditingItem(null);
-
-    // Show success notification
-    setNotification({
-      show: true,
-      message: "Item updated successfully!",
-      type: "success",
-    });
-
-    // Hide notification after 3 seconds
-    setTimeout(() => {
-      setNotification({ ...notification, show: false });
-    }, 3000);
-  };
-
-  // Close notification
-  const closeNotification = () => {
-    setNotification({ ...notification, show: false });
   };
 
   if (loading)
@@ -235,10 +195,7 @@ const DataTable = () => {
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <button
-                    className="text-gray-500 hover:text-gray-700"
-                    onClick={() => handleEdit(row)}
-                  >
+                  <button className="text-gray-500 hover:text-gray-700">
                     <FaEdit />
                   </button>
                 </td>
@@ -327,36 +284,6 @@ const DataTable = () => {
           </nav>
         </div>
       </div>
-
-      {/* Edit Modal */}
-      {editingItem && (
-        <Modal
-          isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setEditingItem(null);
-          }}
-          title="Edit User Information"
-        >
-          <EditForm
-            data={editingItem}
-            onSave={handleSave}
-            onCancel={() => {
-              setIsModalOpen(false);
-              setEditingItem(null);
-            }}
-          />
-        </Modal>
-      )}
-
-      {/* Notification */}
-      {notification.show && (
-        <Notification
-          message={notification.message}
-          type={notification.type}
-          onClose={closeNotification}
-        />
-      )}
     </div>
   );
 };
