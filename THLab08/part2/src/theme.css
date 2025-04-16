@@ -1,0 +1,93 @@
+:root {
+  /* Light theme variables */
+  --light-bg: #f9f9f9;
+  --light-text: #333;
+  --light-component-bg: #ffffff;
+  --light-border: #ddd;
+  --light-shadow: rgba(0, 0, 0, 0.1);
+  --light-hover: #f1f3f5;
+
+  /* Dark theme variables */
+  --dark-bg: #121212;
+  --dark-text: #e0e0e0;
+  --dark-component-bg: #1e1e1e;
+  --dark-border: #444;
+  --dark-shadow: rgba(0, 0, 0, 0.3);
+  --dark-hover: #2c2c2c;
+}
+
+/* Applied based on theme */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.light-theme {
+  background-color: var(--light-bg);
+  color: var(--light-text);
+}
+
+body.dark-theme {
+  background-color: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+/* Component styles for light theme */
+.light-theme .counter,
+.light-theme .todo-container {
+  background-color: var(--light-component-bg);
+  box-shadow: 0 2px 8px var(--light-shadow);
+}
+
+.light-theme .todo-item {
+  background-color: #f8f9fa;
+}
+
+.light-theme .todo-item:hover {
+  background-color: var(--light-hover);
+}
+
+.light-theme .todo-input {
+  border-color: var(--light-border);
+  background-color: var(--light-component-bg);
+  color: var(--light-text);
+}
+
+/* Component styles for dark theme */
+.dark-theme .counter,
+.dark-theme .todo-container {
+  background-color: var(--dark-component-bg);
+  box-shadow: 0 2px 8px var(--dark-shadow);
+}
+
+.dark-theme .counter h2,
+.dark-theme .todo-container h2,
+.dark-theme .app h1 {
+  color: var(--dark-text);
+}
+
+.dark-theme .counter-value {
+  color: #81a1c1;
+}
+
+.dark-theme .todo-item {
+  background-color: #2c2c2c;
+  color: var(--dark-text);
+}
+
+.dark-theme .todo-item:hover {
+  background-color: var(--dark-hover);
+}
+
+.dark-theme .todo-input {
+  border-color: var(--dark-border);
+  background-color: #2c2c2c;
+  color: var(--dark-text);
+}
+
+.dark-theme .completed {
+  color: #949494;
+}
+
+.dark-theme .empty-message {
+  color: #949494;
+}
